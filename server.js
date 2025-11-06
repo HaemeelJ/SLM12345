@@ -1,4 +1,4 @@
-// server.js (최종 버전: 모든 기능, 경로 설정, 포트 설정 포함)
+// server.js 
 
 const express = require('express');
 const http = require('http');
@@ -529,3 +529,4 @@ const PORT = process.env.PORT || 3000; 
 server.listen(PORT, () => {
     console.log(`✅ 서버가 ${PORT}번 포트에서 실행 중입니다.`);
 });
+
