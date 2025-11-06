@@ -169,8 +169,10 @@ function processAuctionEnd() {
             winningTeam.budget -= finalBid;
             winningTeam.players.push({ nickname: item.nickname, pos: item.mainPos });
             item.winner = winnerTeam;
-            item.finalBid = finalBid;
+            // ************ 낙찰 처리 시 isAuctioned 플래그 설정 ************
             item.isAuctioned = true; 
+            // **************************************************************
+            item.finalBid = finalBid;
             isSold = true;
         } else {
              winnerTeam = '유찰';
@@ -501,7 +503,6 @@ io.on('connection', (socket) => {
         if (auctionState.highestBidderId === socket.id) {
             auctionState.highestBidderId = null;
             auctionState.highestBidderNickname = '최고 입찰자가 연결을 끊었습니다.';
-            broadcastBidUpdate();
         }
     });
     
@@ -523,6 +524,7 @@ io.on('connection', (socket) => {
 // ****************************
 
 // 8. 서버 구동
+// Render 환경 변수 PORT를 사용하거나 로컬에서 3000을 사용
 const PORT = process.env.PORT || 3000; 
 server.listen(PORT, () => {
     console.log(`✅ 서버가 ${PORT}번 포트에서 실행 중입니다.`);
