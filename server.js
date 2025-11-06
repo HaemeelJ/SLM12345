@@ -1,4 +1,4 @@
-// server.js
+// server.js (최종 버전: 모든 기능, 경로 설정, 포트 설정 포함)
 
 const express = require('express');
 const http = require('http');
@@ -6,6 +6,8 @@ const path = require('path');
 const { Server } = require("socket.io"); 
 const { shuffle } = require('lodash');
 const fs = require('fs');
+
+// [경로 변수]
 const dataPath = path.join(__dirname, 'data');
 const itemsFilePath = path.join(dataPath, 'auctionItems.json');
 const teamsFilePath = path.join(dataPath, 'teamState.json'); 
@@ -70,11 +72,12 @@ loadData();
 
 
 const app = express();
-const server = http.createServer(app); 
-const io = new Server(server);
-
+// [핵심 수정: public 폴더 경로 설정]
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
+
+const server = http.createServer(app); 
+const io = new Server(server);
 
 
 // *********************************************************
@@ -256,7 +259,7 @@ function startCountdown() {
 }
 
 
-// 라우팅 (기존과 동일)
+// 라우팅 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'bidder.html'));
 });
@@ -394,7 +397,6 @@ io.on('connection', (socket) => {
     
     // [강제 배정 기능 - 항상 활성화]
     socket.on('assignItemToTeam', ({ teamName }) => {
-        // 유찰자 라운드 체크 제거 (항상 가능)
         
         // 현재 경매 대상 리스트를 isRaffleRound에 따라 결정
         const currentItemList = auctionState.isRaffleRound ? failedItems : auctionItems; 
